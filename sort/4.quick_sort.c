@@ -63,6 +63,7 @@ int partition(void *arr, int head, int tail, char mode)
 			}
 		}
 		j--;
+		swap(&arrN[head], &arrN[j], mode);
 	}
 	else if(mode == 's')
 	{
