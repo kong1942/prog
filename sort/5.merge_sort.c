@@ -7,7 +7,9 @@ int main(int argc, char **argv)
 {
 	int i=0;
 	char line[MAXLEN];
-	FILE *fp = fopen("data", "r");
+	FILE *fp;
+       	if(fp = fopen("data", "r") == NULL)
+		errmsg("data error");
 	
 	if(argc == 1 || !strcmp(argv[1], "-n"))
 	{

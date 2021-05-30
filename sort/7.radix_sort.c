@@ -1,3 +1,5 @@
+//Use counting sort to sort each digit
+//Least significant digit
 #include "sort.h"
 #define MAXDIGIT 11
 
@@ -7,10 +9,12 @@ int main(int argc, char **argv)
 {
 	int i=0, j=0, k=0;
 	char line[MAXLEN];
-	FILE *fp = fopen("data", "r");
 	char **arr2 = (char **)malloc(sizeof(char *) * DATANUM);
 	for(i=0; i<DATANUM; i++)
 		arr2[i] = (char *)malloc(sizeof(char) * MAXLEN-1);
+	FILE *fp;
+       	if(fp = fopen("data", "r") == NULL)
+		errmsg("data error");
 	
 	if(argc == 1 || !strcmp(argv[1], "-n"))
 	{
