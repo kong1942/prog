@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define MAXLEN 15
+#define MAXLEN 12
 #define DATANUM 1e4
 
 void errmsg(char *str)
