@@ -13,7 +13,7 @@ int main(int argc, char **argv)
 	for(i=0; i<DATANUM; i++)
 		arr2[i] = (char *)malloc(sizeof(char) * MAXLEN-1);
 	FILE *fp;
-       	if(fp = fopen("data", "r") == NULL)
+       	if((fp = fopen("data", "r")) == NULL)
 		errmsg("data error");
 	
 	if(argc == 1 || !strcmp(argv[1], "-n"))

@@ -1,13 +1,13 @@
 all: rand.o bsort.o isort.o ssort.o qsort.o msort.o hsort.o rsort.o
-	cc rand.o -o rand
+	gcc rand.o -o rand
 	./rand
-	cc bsort.o -o bsort
-	cc isort.o -o isort
-	cc ssort.o -o ssort
-	cc qsort.o -o qsort
-	cc msort.o -o msort
-	cc hsort.o -o hsort
-	cc rsort.o -o rsort
+	gcc bsort.o -o bsort
+	gcc isort.o -o isort
+	gcc ssort.o -o ssort
+	gcc qsort.o -o qsort
+	gcc msort.o -o msort
+	gcc hsort.o -o hsort
+	gcc rsort.o -o rsort
 
 rand.o: rand.c
 bsort.o: sort.h 1.bubble_sort.c
