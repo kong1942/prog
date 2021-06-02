@@ -7,7 +7,6 @@ struct stack
 	int *bottom;
 };
 
-void getcommand(char *line, char *command);
 void init(struct stack *s);
 void push(struct stack *s, int key);
 void pop(struct stack *s);
@@ -26,8 +25,7 @@ int main()
 
 	while(fgets(line, MAXLEN, stdin))
 	{
-		len = strlen(line);
-		if(line[len-1] == '\n') line[len-1] = '\0';
+		rmNewline(line);
 		if(*line == '\0')
 			continue;
 		else
@@ -50,14 +48,6 @@ int main()
 	free(s->key);
 	free(s);
 	return 0;
-}
-
-void getcommand(char *line, char *command)
-{
-	char *ptr = line;
-	char *qtr = command;
-	while(qtr - command < 5 && isalpha(*ptr)) {*qtr++ = *ptr++;}
-	*qtr = '\0';
 }
 
 void init(struct stack *s)

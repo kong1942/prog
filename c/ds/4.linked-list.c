@@ -6,7 +6,6 @@ struct Lnode
 	struct Lnode *next;
 };
 
-void getcommand(char *line, char *command);
 struct Lnode *insertAtHead(struct Lnode *l, int key);						//insert at head
 struct Lnode *insertAtTail(struct Lnode *l, int key);						//insert at tail
 struct Lnode *delete(struct Lnode *l, int key);
@@ -24,8 +23,7 @@ int main()
 	while(fgets(line, MAXLEN, stdin))
 	{
 		ptr = line;
-		len = strlen(line);
-		if(line[len-1] == '\n') line[len-1] = '\0';
+		rmNewline(line);
 		if(*line == '\0') continue;
 		else
 		{
@@ -56,14 +54,6 @@ int main()
 	traversal(l);
 
 	return 0;
-}
-
-void getcommand(char *line, char *command)
-{
-	char *ptr = line;
-	char *qtr = command;
-	while(qtr - command < 5 && isalpha(*ptr)) {*qtr++ = *ptr++;}
-	*qtr = '\0';
 }
 
 struct Lnode *insertAtHead(struct Lnode *l, int key)
