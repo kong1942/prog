@@ -26,8 +26,7 @@ int main()
 	while(fgets(line, MAXLEN, stdin))
 	{
 		rmNewline(line);
-		if(*line == '\0') continue;
-		else 
+		if(*line)
 		{
 			getcommand(line, wd);
 			if(!strcmp(wd, "enq"))

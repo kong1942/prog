@@ -27,8 +27,7 @@ int main()
 	while(fgets(line, MAXLEN, stdin))
 	{
 		rmNewline(line);
-		if(*line == '\0') continue;
-		else
+		if(*line)
 		{
 			ptr = line;
 			getcommand(line, wd);

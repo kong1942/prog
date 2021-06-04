@@ -22,11 +22,10 @@ int main()
 	
 	while(fgets(line, MAXLEN, stdin))
 	{
-		ptr = line;
 		rmNewline(line);
-		if(*line == '\0') continue;
-		else
+		if(*line)
 		{
+			ptr = line;
 			getcommand(line, wd);
 			if(!strcmp(wd, "inh"))
 			{

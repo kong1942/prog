@@ -14,7 +14,7 @@ struct BSnode *insert(struct BSnode *root, int key);
 struct BSnode *delete(struct BSnode *root, int key);
 void BreadthFirstSearch(struct BSnode *root);
 void DepthFirstSearch(struct BSnode *root, char *wd);
-void getwd(char *linem, char *wd);
+void getwd(char *line, char *wd);
 void inorder(struct BSnode *root);
 void preorder(struct BSnode *root);
 void postorder(struct BSnode *root);
@@ -29,11 +29,10 @@ int main()
 
 	while(fgets(line, MAXLEN, stdin))
 	{
-		ptr = line;
 		rmNewline(line);
-		if(*line == '\0') continue;
-		else
+		if(*line)
 		{
+			ptr = line;
 			getcommand(line, wd);
 			if(!strcmp(wd, "in"))
 			{
