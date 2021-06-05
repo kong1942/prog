@@ -18,6 +18,7 @@ void rotateRight(struct RBnode *pivot);
 void rotateLeft(struct RBnode *pivot);
 struct RBnode *balance(struct RBnode *node);
 struct RBnode *insert(struct RBnode *root, int key);
+struct RBnode *delBalance(struct RBnode *node);
 struct RBnode *delete(struct RBnode *root, int key);
 void getwd(char *line, char *wd);
 void BreadthFirstSearch(struct RBnode *root);
@@ -44,14 +45,15 @@ int main()
 			if(!strcmp(wd, "in"))
 			{
 				while(*ptr && !isdigit(*ptr))  {ptr++;}
-				if(*ptr)
-				{
-					root = insert(root, atoi(ptr));
-				}
+				if(*ptr) root = insert(root, atoi(ptr));
 				else errmsg("insert error");
 			}
 			else if(!strcmp(wd, "del"))
-			{}
+			{
+				while(*ptr && !isdigit(*ptr))  {ptr++;}
+				if(*ptr) root = delete(root, atoi(ptr));
+				else errmsg("insert error");
+			}
 			else if(!strcmp(wd, "BFS"))
 			{
 				BreadthFirstSearch(root);
@@ -226,7 +228,175 @@ struct RBnode *insert(struct RBnode *root, int key)
 	return q;
 }
 
-struct RBnode *delete(struct RBnode *root, int key);
+struct RBnode *delBalance(struct RBnode *node)
+{
+	if(node->parent == NULL) return node;
+
+	struct RBnode *N = node;
+	struct RBnode *P = node->parent;
+	struct RBnode *S;
+	if(N == P->Rchild) S = P->Lchild;
+	else S = P->Rchild;
+
+	if(S->color == 'R')
+	{
+		S->color = 'B';
+		P->color = 'R';
+		if(N == P->Rchild) rotateRight(P);
+		else rotateLeft(P);
+		delBalance(N);
+	}
+	else
+	{
+		struct RBnode *r = N;
+		if(P->color == 'B'&& (S->Rchild == NULL || S->Rchild->color == 'B') && (S->Lchild == NULL || S->Lchild->color == 'B'))
+		{
+			S->color = 'R';
+			delBalance(P);
+		}
+		else if(P->color == 'R' && (S->Rchild == NULL || S->Rchild->color == 'B') && (S->Lchild == NULL || S->Lchild->color == 'B'))
+		{
+			S->color = 'R';
+			P->color = 'B';
+			while(r->parent) {r = r->parent;}
+			return r;
+		}
+		else if(N == P->Lchild && S->Lchild && S->Lchild->color == 'R' && (S->Rchild == NULL || S->Rchild->color == 'B'))
+		{
+			S->color = 'R';
+			S->Lchild->color = 'B';
+			rotateRight(S);
+			delBalance(N);
+		}
+		else if(N == P->Rchild && S->Rchild && S->Rchild->color == 'R' && (S->Lchild == NULL || S->Lchild->color == 'B'))
+		{
+			S->color = 'R';
+			S->Rchild->color = 'B';
+			rotateLeft(S);
+			delBalance(N);
+		}
+		else if(N == P->Rchild && S->Lchild && S->Lchild->color == 'R')
+		{
+			S->color = P->color;
+			P->color = 'B';
+			S->Lchild->color = 'B';
+			rotateRight(P);
+			while(r->parent) {r = r->parent;}
+			return r;
+		}
+		else if(N == P->Lchild && S->Rchild && S->Rchild->color == 'R')
+		{
+			S->color = P->color;
+			P->color = 'B';
+			S->Rchild->color = 'B';
+			rotateLeft(P);
+			while(r->parent) {r = r->parent;}
+			return r;
+		}
+	}
+}
+
+struct RBnode *delete(struct RBnode *root, int key)
+{
+	struct RBnode *q = root;
+	char RL = '\0';
+	while(q)
+	{
+		if(key > q->key)
+		{
+			RL = 'R';
+			q = q->Rchild;
+		}
+		else if(key < q->key)
+		{
+			RL = 'L';
+			q = q->Lchild;
+		}
+		else
+		{
+			numOfNode--;
+			struct RBnode *n, *r;
+			int key;
+			if(q->Rchild)
+			{
+				RL = 'R';
+				n = q->Rchild;
+				if(n->Lchild)
+				{
+					RL = 'L';
+					while(n->Lchild) {n = n->Lchild;}
+				}
+				key = n->key;
+				n->key = q->key;
+				q->key = key;
+				q = n;
+				r = root;
+				if(q->Rchild)
+				{
+					q->Rchild->parent = q->parent;
+					if(q == q->parent->Rchild) q->parent->Rchild = q->Rchild;
+					else q->parent->Lchild = q->Rchild;
+					
+					if(q->Rchild->color == 'R') q->Rchild->color = 'B';
+					else r = delBalance(q->Rchild);
+				}
+				else //n->Rchild, Lchild == NULL
+				{
+					if(q == q->parent->Rchild) q->parent->Rchild = NULL;
+					else q->parent->Lchild = NULL;
+				}
+			}
+			else if(q->Lchild)
+			{
+				RL = 'L';
+				n = q->Lchild;
+				if(n->Rchild)
+				{
+					RL = 'R';
+					while(n->Rchild) {n = n->Rchild;}
+				}
+				key = n->key;
+				n->key = q->key;
+				q->key = key;
+				q = n;
+				r = root;
+				if(q->Lchild)
+				{
+					q->Lchild->parent = q->parent;
+					if(q == q->parent->Rchild) q->parent->Rchild = q->Lchild;
+					else q->parent->Lchild = q->Lchild;
+					
+					if(q->Lchild->color == 'R') q->Lchild->color = 'B';
+					else r = delBalance(q->Lchild);
+				}
+				else //n->R, Lchild == NULL
+				{
+					if(q == q->parent->Rchild) q->parent->Rchild = NULL;
+					else q->parent->Lchild = NULL;
+				}
+			}
+			else //(q->Rchild == NULL && q->Lchild == NULL)
+			{
+				if(q == root)
+				{
+					free(q);
+					return NULL;
+				}
+				else
+				{
+					if(q == q->parent->Rchild) q->parent->Rchild = NULL;
+					else q->parent->Lchild = NULL;
+					free(q);
+					return root;
+				}
+			}
+			free(q);
+			return r;
+		}
+	}
+	errmsg("delete error");
+	return root;
+}
 
 void getwd(char *line, char *wd)
 {
@@ -241,16 +411,20 @@ void getwd(char *line, char *wd)
 void BreadthFirstSearch(struct RBnode *root)
 {
 	if(root == NULL) {errmsg("is empty"); return;}
-	int head=1, tail=1, height=1, lastHeight=-1, n, N;
+	/*
+	int height=1, lastHeight=-1, n, N;
 	n = (int) pow(2, maxHeight+1);
 	N = n;
-	struct RBnode *p, *q;
-	struct RBnode **arr = (struct RBnode **)malloc(sizeof(struct RBnode) * n);
-	memset(arr, 0, sizeof(struct RBnode *) * n);
+	*/
+	int head = 0, tail = 0;
+	struct RBnode *p;
+	struct RBnode **arr = (struct RBnode **)malloc(sizeof(struct RBnode) * (numOfNode+1));
+	memset(arr, 0, sizeof(struct RBnode *) * (numOfNode+1));
 
 	arr[tail] = root; tail++;
-	while(head != N)
+	while(head != tail)
 	{
+		/*
 		height = (int) log2(head);						//print current level
 		if(lastHeight != height) 
 		{
@@ -261,19 +435,18 @@ void BreadthFirstSearch(struct RBnode *root)
 				printf("        ");
 		}
 		lastHeight = height;
-		
+		*/
 
 		p = arr[head];
-		if(p)
-		{
-			printf("<%2d , %c>", p->key, p->color);
-			if(p->Lchild) {arr[head*2] = p->Lchild; tail++;}
-			if(p->Rchild) {arr[head*2+1] = p->Rchild; tail++;}
-		}
+		printf("%d ", p->key);
+		if(p->Lchild) {arr[tail] = p->Lchild; tail++;}
+		if(p->Rchild) {arr[tail] = p->Rchild; tail++;}
+		/*
 		else printf("< NULL >");
 
 		for(int i=0; i<(n*2)-1; i++)
 			printf("        ");
+		*/
 		head++;
 	}
 

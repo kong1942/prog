@@ -127,6 +127,7 @@ struct BSnode *delete(struct BSnode *root, int key)
 		{
 			numOfNode--;
 			struct BSnode *n;
+			int key;
 			if(q->Rchild)
 			{
 				n = q->Rchild;
@@ -139,12 +140,11 @@ struct BSnode *delete(struct BSnode *root, int key)
 				else
 				{
 					while(n->Lchild) {n = n->Lchild;}
-					n->parent->Lchild = n->Rchild;
-					n->parent = p;
-					n->Rchild = q->Rchild;
-					n->Lchild = q->Lchild;
-					if(RL == 'R') p->Rchild = n;
-					else p->Lchild = n;
+					n->parent->Lchild = NULL;
+					key = n->key;
+					n->key = q->key;
+					q->key = key;
+					q = n;
 				}
 			}
 			else if(q->Lchild)
@@ -159,12 +159,11 @@ struct BSnode *delete(struct BSnode *root, int key)
 				else
 				{
 					while(n->Rchild) {n = n->Rchild;}
-					n->parent->Rchild = n->Lchild;
-					n->parent = p;
-					n->Rchild = q->Rchild;
-					n->Lchild = q->Lchild;
-					if(RL == 'R') p->Rchild = n;
-					else p->Lchild = n;
+					n->parent->Rchild = NULL;
+					key = n->key;
+					n->key = q->key;
+					q->key = key;
+					q = n;
 				}
 			}
 			else 
